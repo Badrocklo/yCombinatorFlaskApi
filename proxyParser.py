@@ -21,11 +21,11 @@ fcjson = "cjson.dump"
     
 def dumpHelper(name, data):
     with open(name, "wb") as f:
-        cPickle.dump(data, f)
+        pickle.dump(data, f)
 
 def loadHelper(name):
     with open(name, "rb") as f:
-        return cPickle.load(f)
+        return pickle.load(f)
 
 class ProxyParser(object):
     __lasttime = {
@@ -37,18 +37,36 @@ class ProxyParser(object):
         "xml":"cached/cxml.dump"
         }
     __cb = yCombinatorParser()
+
     
-    def getJson():
+    def __init__(self):
+        if not os.path.exists("cached"):
+            os.makedirs("cached")
+        for f in self.__fclist.itervalues():
+            if not os.path.exists(f):
+                with open(f, "w") as ft:
+                    logger.debug("File %s created." % f)
+                              
+    
+    def getJson(self):
         cjson = ""
-        if (os.path.getctime(fcjson) - self.__lasttime["json"])<60:
+        nt = os.path.getctime(self.__fclist["json"])
+        ot = self.__lasttime["json"]
+        if (nt - ot)>60:
             logger.debug("Update json.")
             try:
                 self.__cb.refresh()
+                logger.debug("Refresh json.")
                 self.__cb.parse()
+                logger.debug("Parse json.")
                 cjson = self.__cb.getJson()
+                logger.debug("Getjson json.")
                 dumpHelper(self.__fclist["json"], cjson)
-            except:
+                logger.debug("dump json.")
+                self.__lasttime["json"] = nt
+            except Exception ,e:
                 logger.debug("Failed to retrieve data.")
+                logger.debug(e)
         else:
             logger.debug("Retrieve json from cache.")
             cjson = loadHelper(self.__fclist["json"])

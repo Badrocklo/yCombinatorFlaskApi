@@ -6,6 +6,17 @@ import re
 import copy
 import json
 
+import logging
+
+#Init logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+sh = logging.StreamHandler()
+sh.setLevel(logging.DEBUG)
+sh.setFormatter(logging.Formatter("%(asctime)s - %(name)s | %(message)s"))
+logger.addHandler(sh)
+
+
 # class HackerNewsRest(BaseHTTPRequestHandler):
 #     def do_GET(self):
 #         pass
@@ -37,11 +48,11 @@ class yCombinatorParser(object):
         try:
             self.__data = bs(urllib2.urlopen(self.__url).read())('tr')
         except:
-            print("Failed to get %s"%self.__url)
+            logger.debug("Failed to retrieve data from url.")
 
     def parse(self):
+        self.__datajson["items"] = []
         for i in xrange(4,len(self.__data)-5, 3):
-            print("it: %s" % i);
             url = self.__data[i]('td')[2]
             item = copy.deepcopy(self.__data_item)
             item["title"] = url.a.text
