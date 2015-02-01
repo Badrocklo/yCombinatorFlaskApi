@@ -8,7 +8,7 @@ pp = ProxyParser()
 def taskParser():
     while True:
         pp.runParser()
-        time.sleep(5)
+        time.sleep(20)
     
 
 @app.route("/json")
