@@ -28,10 +28,6 @@ def loadHelper(name):
         return pickle.load(f)
 
 class ProxyParser(object):
-    __lasttime = {
-        "json":0,
-        "xml":0
-        }
     __fclist = {
         "json":"cached/cjson.dump",
         "xml":"cached/cxml.dump"
@@ -46,29 +42,26 @@ class ProxyParser(object):
             if not os.path.exists(f):
                 with open(f, "w") as ft:
                     logger.debug("File %s created." % f)
+
+    def runParser(self):
+        logger.debug("Update json.")
+        try:
+            self.__cb.refresh()
+            logger.debug("Refresh json.")
+            self.__cb.parse()
+            logger.debug("Parse json.")
+            cjson = self.__cb.getJson()
+            logger.debug("Getjson json.")
+            dumpHelper(self.__fclist["json"], cjson)
+            logger.debug("dump json.")
+        except Exception ,e:
+            logger.debug("Failed to retrieve data.")
+            logger.debug(e)
+    
                               
     
     def getJson(self):
-        cjson = ""
-        nt = os.path.getctime(self.__fclist["json"])
-        ot = self.__lasttime["json"]
-        if (nt - ot)>60:
-            logger.debug("Update json.")
-            try:
-                self.__cb.refresh()
-                logger.debug("Refresh json.")
-                self.__cb.parse()
-                logger.debug("Parse json.")
-                cjson = self.__cb.getJson()
-                logger.debug("Getjson json.")
-                dumpHelper(self.__fclist["json"], cjson)
-                logger.debug("dump json.")
-                self.__lasttime["json"] = nt
-            except Exception ,e:
-                logger.debug("Failed to retrieve data.")
-                logger.debug(e)
-        else:
-            logger.debug("Retrieve json from cache.")
-            cjson = loadHelper(self.__fclist["json"])
+        logger.debug("Retrieve json from cache.")
+        cjson = loadHelper(self.__fclist["json"])
         return cjson
     
