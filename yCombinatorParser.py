@@ -10,9 +10,9 @@ import logging
 
 #Init logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.WARNING)
 sh = logging.StreamHandler()
-sh.setLevel(logging.DEBUG)
+sh.setLevel(logging.WARNING)
 sh.setFormatter(logging.Formatter("%(asctime)s - %(name)s | %(message)s"))
 logger.addHandler(sh)
 
@@ -48,7 +48,7 @@ class yCombinatorParser(object):
         try:
             self.__data = bs(urllib2.urlopen(self.__url).read())('tr')
         except:
-            logger.debug("Failed to retrieve data from url.")
+            logger.warning("Failed to retrieve data from url.")
 
     def parse(self):
         self.__datajson["items"] = []

@@ -5,9 +5,9 @@ import logging
 
 #Init logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.WARNING)
 sh = logging.StreamHandler()
-sh.setLevel(logging.DEBUG)
+sh.setLevel(logging.WARNING)
 sh.setFormatter(logging.Formatter("%(asctime)s - %(name)s | %(message)s"))
 logger.addHandler(sh)
     
@@ -55,8 +55,8 @@ class ProxyParser(object):
             dumpHelper(self.__fclist["json"], cjson)
             logger.debug("dump json.")
         except Exception ,e:
-            logger.debug("Failed to retrieve data.")
-            logger.debug(e)
+            logger.warning("Failed to retrieve data.")
+            logger.warning(e)
     
                               
     

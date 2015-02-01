@@ -13,7 +13,6 @@ def taskParser():
 
 @app.route("/json")
 def yCombJson():
-    print("Request")
     return pp.getJson()
 
 
