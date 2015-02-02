@@ -14,4 +14,4 @@ Package for python2.7 needed:
 
 
 I have only test it in python2.7
-
+More informations on my [Blog](http://badrocklo.github.io/)
