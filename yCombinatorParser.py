@@ -4,7 +4,6 @@ from BeautifulSoup import BeautifulSoup as bs
 from pdb import set_trace as dbg
 import re
 import copy
-import json
 
 import logging
 
@@ -22,6 +21,11 @@ logger.addHandler(sh)
 #         pass
 
 class yCombinatorParser(object):
+    """
+    Class which parse the html data of new.ycombinator.com website
+    it organize them in a dict which follow the api.ihackernews.com
+    json.
+    """
     __url = "https://news.ycombinator.com/"
     __datajson = {
         "nextId":2,
@@ -70,7 +74,4 @@ class yCombinatorParser(object):
 
 
     def getData(self):
-        return self.__data
-
-    def getJson(self):
-        return json.dumps(self.__datajson)
+        return self.__datajson
