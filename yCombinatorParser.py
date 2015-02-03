@@ -1,7 +1,11 @@
-# from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import urllib2
-from BeautifulSoup import BeautifulSoup as bs
-from pdb import set_trace as dbg
+import sys
+if sys.version[0] == '2':
+    from urllib2 import urlopen as urlopen
+elif sys.version[0] == '3':
+    from urllib.request import urlopen as urlopen
+    
+from bs4 import BeautifulSoup as bs
+#from pdb import set_trace as dbg
 import re
 import copy
 
@@ -15,10 +19,6 @@ sh.setLevel(logging.WARNING)
 sh.setFormatter(logging.Formatter("%(asctime)s - %(name)s | %(message)s"))
 logger.addHandler(sh)
 
-
-# class HackerNewsRest(BaseHTTPRequestHandler):
-#     def do_GET(self):
-#         pass
 
 class yCombinatorParser(object):
     """
@@ -50,13 +50,19 @@ class yCombinatorParser(object):
 
     def refresh(self):
         try:
-            self.__data = bs(urllib2.urlopen(self.__url).read())('tr')
+            self.__data = bs(urlopen(self.__url).read())('tr')
         except:
             logger.warning("Failed to retrieve data from url.")
 
     def parse(self):
+        """
+        HTML parser the loop begin to 4 because the first 'tr'
+        are used for the table title, and done to len-5 because
+        the last 5 'tr' are use for More, Guidelines, blabla.
+        Each items use 3 'tr'.
+        """
         self.__datajson["items"] = []
-        for i in xrange(4,len(self.__data)-5, 3):
+        for i in range(4,len(self.__data)-5, 3):
             url = self.__data[i]('td')[2]
             item = copy.deepcopy(self.__data_item)
             item["title"] = url.a.text

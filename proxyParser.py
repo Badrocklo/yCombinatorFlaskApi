@@ -40,7 +40,7 @@ class ProxyParser(object):
     def __init__(self):
         if not os.path.exists("cached"):
             os.makedirs("cached")
-        for f in self.__fclist.itervalues():
+        for f in self.__fclist.values():
             if not os.path.exists(f):
                 with open(f, "w") as ft:
                     logger.debug("File %s created." % f)
@@ -57,7 +57,7 @@ class ProxyParser(object):
             logger.debug("Getjson json.")
             dumpHelper(self.__fclist["parse"], cjson)
             logger.debug("dump json.")
-        except Exception ,e:
+        except Exception as e:
             logger.warning("Failed to retrieve data.")
             logger.warning(e)
               
