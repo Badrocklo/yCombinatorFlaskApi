@@ -63,14 +63,26 @@ class yCombinatorParser(object):
         """
         self.__datajson["items"] = []
         for i in range(4,len(self.__data)-5, 3):
+            logger.debug("Begin loop")
             url = self.__data[i]('td')[2]
             item = copy.deepcopy(self.__data_item)
+            logger.debug("Deepcopy")
             item["title"] = url.a.text
-            item["url"] = url.a.attrs[0][1]
+            logger.debug("Title: %s" % url.a.text)
+            logger.debug("url a attrs: %s" % url.a.attrs)
+            if isinstance(url.a.attrs, list):
+                item["url"] = url.a.attrs[0][1]
+            elif isinstance(url.a.attrs, dict):
+                item["url"] = url.a.attrs['href']
+            logger.debug("url: %s" % item["url"])
             td = self.__data[i+1]
+            logger.debug("td1: %s" % td)
             td = td('td')
+            logger.debug("td2: %s" % td)
             td = td[1]
+            logger.debug("td3: %s" % td)
             if not td.span is None:
+                logger.debug("span text: %s" % td.span.text)
                 tdf = self.__d.match(td.span.text)
                 item["points"] = td.span.text[tdf.start():tdf.end()]
                 item["postedBy"] = td('a')[0].text
